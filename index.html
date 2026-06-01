@@ -68,18 +68,21 @@
 
   <!-- ========================================================
        SCREEN 2 — DATE (pick a day)
-       Thursday / Sunday = real. Friday = bounces back (the bit).
+       Thursday / Sunday = good (advance). Friday / Saturday = no.
   ========================================================= -->
-  <section class="screen" data-screen="date">
-    <div class="card">
-      <h2>okay. when are you free?</h2>
+  <section class="screen bg-spirited" data-screen="date">
+    <div class="day-wrap">
+      <img class="day-gif" id="dayGif"
+           src="resources/time-is-up-rabbit-meme-time-is-up-rabbit-time.gif" alt="" />
+      <h2 class="day-q">so what day are WE free?</h2>
       <div class="options">
-        <button class="opt" data-choice="day" data-value="Thursday">Thursday</button>
-        <button class="opt" data-choice="day" data-value="Sunday">Sunday</button>
-        <button class="opt opt-trap" data-choice="day" data-value="Friday">Friday</button>
+        <button class="opt" data-choice="day" data-value="Thursday 04 June">Thursday 04</button>
+        <button class="opt" data-choice="day" data-value="Friday 05 June">Friday 05</button>
+        <button class="opt" data-choice="day" data-value="Saturday 06 June">Saturday 06</button>
+        <button class="opt" data-choice="day" data-value="Sunday 07 June">Sunday 07</button>
       </div>
       <p class="reaction" id="dateReaction"></p>
-      <!-- per-day reaction memes (optional) live in memes/04-date -->
+      <img class="day-react" id="dayReact" alt="" hidden />
     </div>
   </section>
 
