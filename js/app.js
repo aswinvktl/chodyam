@@ -6,9 +6,8 @@ const state = { day: null, time: null, food: null, note: "" };
 let currentScreen = "ask1";
 let videoDone = false;
 
-// ----- music -----
-// browsers wont let it autoplay until she clicks something, so we just
-// fire it on the first click/tap. took me ages to figure out why it was silent
+
+// browsers wont let it autoplay ffs
 const bgMusic = document.getElementById("bgMusic");
 let musicStarted = false;
 function startMusic() {
@@ -19,7 +18,7 @@ function startMusic() {
 document.addEventListener("click", startMusic);
 document.addEventListener("touchstart", startMusic);
 
-// pause the song while the video plays so they dont fight, then bring it back
+// pause the song while the video plays so they dont fight andthen bring it back
 function duckMusicForVideo(vid) {
   if (!bgMusic) return;
   bgMusic.pause();
@@ -65,7 +64,7 @@ function runScreen1aSequence() {
   }, 600);
 }
 
-// punchline then the question then the buttons, one after another
+// punchline then the question then the buttons
 function runScreen1bSequence() {
   const punch = document.getElementById("seqPunch");
   const askText = document.getElementById("seqAsk");
@@ -78,7 +77,7 @@ function runScreen1bSequence() {
   setTimeout(() => { if (currentScreen === "ask2") buttons.classList.add("show"); }, 2000);
 }
 
-// the no button runs away + cynthia jumpscare
+// the no button runs away plus wicked lady 
 const noRegion = document.getElementById("noRegion");
 const cynthiaScare = document.getElementById("cynthiaScare");
 
@@ -113,8 +112,7 @@ noRegion.addEventListener("touchstart", (e) => {
   setTimeout(() => { cynthiaScare.classList.remove("active"); }, 1000);
 });
 
-// ----- the yes page. img1 fades to img2 then the video plays -----
-// ahhh shit the timing maths here was annoying. its just hold + fade stacked up
+// ahhh shit the just hold + fade stacked up
 const YES_HOLD = 2200;
 const YES_FADE = 800;
 
@@ -144,7 +142,7 @@ function runYesSequence() {
     duckMusicForVideo(vid);
 
     vid.play().catch(() => {
-      // if it wont play just let her move on, dont trap her
+      // if it wont play just let her move on
       videoDone = true;
       inlineNext.classList.add("show");
       if (bgMusic) bgMusic.play().catch(() => {});
@@ -169,8 +167,8 @@ function runYesSequence() {
   };
 }
 
-// ===== DAY PICKER =====
 // thurs and sunday are the good ones. fri/sat get rejected and she has to pick again
+// the illusion of choice. show memes all the time 
 const dateReaction = document.getElementById("dateReaction");
 const dayReact = document.getElementById("dayReact");
 const dateNextBtnReveal = document.getElementById("dateNextBtnReveal");
@@ -238,7 +236,7 @@ document.querySelectorAll('[data-choice="day"]').forEach(btn => {
   });
 });
 
-// ===== TIME =====
+// time 
 const timeReaction = document.getElementById("timeReaction");
 const timeReact = document.getElementById("timeReact");
 const timeNextBtnReveal = document.getElementById("timeNextBtnReveal");
@@ -272,7 +270,7 @@ document.querySelectorAll('[data-choice="time"]').forEach(btn => {
   });
 });
 
-// ===== timeout / water break thing =====
+// shaq timeout. frink water
 const timeoutStage1 = document.getElementById("timeoutStage1");
 const timeoutStage2 = document.getElementById("timeoutStage2");
 const waterCount = document.getElementById("waterCount");
@@ -326,9 +324,10 @@ document.getElementById("waterSkip").addEventListener("click", () => {
   leaveWaterBreak();
 });
 
-// ===== cuisine =====
-// peppa only shows AFTER she clicks. learnt the hard way that the hidden attr
-// loses to css display:block so everything uses style.display now ugh
+
+// peppa only shows AFTER she clicks.
+// fix this later
+// ugggghhhh peppa comes after state is true
 const foodOther = document.getElementById("foodOther");
 const foodReaction = document.getElementById("foodReaction");
 const foodReact = document.getElementById("foodReact");
@@ -400,8 +399,7 @@ foodOther.addEventListener("input", () => {
   }
 });
 
-// ===== note page =====
-// two stages, teaser image first then the actual textbox
+// two stages teaser image first then the actual textbox
 const noteStageTeaser = document.getElementById("noteStageTeaser");
 const noteStageInput = document.getElementById("noteStageInput");
 const noteTypingReact = document.getElementById("noteTypingReact");
@@ -439,8 +437,7 @@ document.getElementById("noteOpenBtn").addEventListener("click", () => {
   noteBox.focus();
 });
 
-// ===== summary / the itinerary =====
-// just dumps her choices into the receipt. snap qr is a plain image in the html now
+// just dumps her choices into the receipt. snap qr is a plain image in the html now. weitr something
 function runSummaryScreenSequence() {
   document.getElementById("summaryDay").textContent = state.day || "Selected Day";
   document.getElementById("summaryTime").textContent = state.time || "Selected Time";
@@ -455,7 +452,7 @@ function runSummaryScreenSequence() {
   }
 }
 
-// ----- buttons that just go to the next screen -----
+// nav buttons
 document.querySelector('[data-action="say-yes"]').addEventListener("click", () => {
   const vid = document.getElementById("yesVideo");
   if (vid) { vid.load(); }
@@ -467,10 +464,9 @@ document.getElementById("videoNextBtn").addEventListener("click", () => { show("
 document.getElementById("dateNextBtn").addEventListener("click", () => { show("time"); });
 document.getElementById("timeNextBtn").addEventListener("click", () => { show("timeout"); });
 document.getElementById("foodNextBtn").addEventListener("click", () => { show("addask"); });
-// dropped the reasons/insta thing, just go straight to the summary
 document.getElementById("addaskNextBtn").addEventListener("click", () => { show("summary"); });
 
-// ===== the back/forward arrows =====
+// arrow
 const ORDER = ["ask1","ask2","afteryes","date","time","timeout","food","addask","summary"];
 const NAV_HIDDEN_ON = ["ask1","ask2","timeout","summary"];
 const navBack = document.getElementById("navBack");
