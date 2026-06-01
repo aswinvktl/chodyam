@@ -349,7 +349,7 @@ function runFoodScreenSequence() {
   foodNextBtnReveal.classList.remove("show");
   foodOther.style.display = "none";
   foodOther.value = "";
-  foodReact.hidden = true;
+  foodReact.style.display = "none";
   foodReaction.textContent = "";
 
   setTimeout(() => { if (currentScreen === "food") qText.classList.add("show"); }, 200);
@@ -358,7 +358,7 @@ function runFoodScreenSequence() {
 
 function triggerFoodFeedback(textStr) {
   foodReaction.textContent = textStr;
-  foodReact.hidden = false;
+  foodReact.style.display = "block";
   
   foodReact.style.transform = "scale(0.9)";
   foodReact.style.transition = "transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.25)";
@@ -394,7 +394,7 @@ foodOther.addEventListener("input", () => {
   if (inputVal) {
     triggerFoodFeedback("that is a reaaaalyyy gooood choice");
   } else {
-    foodReact.hidden = true;
+    foodReact.style.display = "none";
     foodNextBtnReveal.classList.remove("show");
     foodReaction.textContent = "";
     updateNav();
