@@ -20,104 +20,89 @@ function show(name) {
   });
   window.scrollTo(0, 0);
 
-  // Trigger setup for Screen 1a
-  if (name === "ask1") {
-    runScreen1aSequence();
-  }
-
-  // Trigger delayed timeline for Screen 1b
-  if (name === "ask2") {
-    runScreen1bSequence();
-  }
-
+  if (name === "ask1") runScreen1aSequence();
+  if (name === "ask2") runScreen1bSequence();
   if (name === "afteryes") runYesSequence();
+  
   updateNav();
 }
 
-/* ---------- Screen 1a Timing Setup ---------- */
+/* ---------- Screen 1a Timing ---------- */
 function runScreen1aSequence() {
   const arrow = document.getElementById("arrowReveal");
   arrow.classList.remove("show");
-  // The arrow button gracefully drops in after 1.2 seconds
   setTimeout(() => {
     if (currentScreen === "ask1") arrow.classList.add("show");
   }, 1200);
 }
 
-/* ---------- Screen 1b Timed Beats Sequence ---------- */
+/* ---------- Screen 1b Timed Sequence ---------- */
 function runScreen1bSequence() {
   const punch = document.getElementById("seqPunch");
   const askText = document.getElementById("seqAsk");
   const buttons = document.getElementById("seqButtons");
 
-  // Reset states
   [punch, askText, buttons].forEach(el => el.classList.remove("show"));
 
-  // Beat 1: Drop the punchline immediately
-  setTimeout(() => {
-    if (currentScreen === "ask2") punch.classList.add("show");
-  }, 200);
-
-  // Beat 2: The structural pause, then drop "can i have one with you?"
-  setTimeout(() => {
-    if (currentScreen === "ask2") askText.classList.add("show");
-  }, 2200);
-
-  // Beat 3: The decision row drops in right after
-  setTimeout(() => {
-    if (currentScreen === "ask2") buttons.classList.add("show");
-  }, 3800);
+  setTimeout(() => { if (currentScreen === "ask2") punch.classList.add("show"); }, 200);
+  setTimeout(() => { if (currentScreen === "ask2") askText.classList.add("show"); }, 2200);
+  setTimeout(() => { if (currentScreen === "ask2") buttons.classList.add("show"); }, 3800);
 }
 
-/* ---------- No Button Run Away Logic + Cynthia Scare Popup ---------- */
+/* ---------- No Button Running Away + Pure Hover Cynthia Toggle ---------- */
 const noBtn = document.getElementById("noBtn");
 const cynthiaScare = document.getElementById("cynthiaScare");
 
-function handleNoInteraction(e) {
-  // 1. Activate full screen borderless center Cynthia jump-scare pop-up
-  cynthiaScare.classList.add("active");
-
-  // 2. Safely translate button away without ever overlapping YES button lane
-  // Confines movement vector strictly to the outer right/bottom zone
+function moveNoButton() {
+  // Move the button securely away from the YES button grid path
   const moveX = (Math.random() * 120 + 60).toFixed(0); 
   const moveY = (Math.random() * 100 - 50).toFixed(0);
-  
   noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
 }
 
-noBtn.addEventListener("mouseover", handleNoInteraction);
-noBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  handleNoInteraction();
+noBtn.addEventListener("mouseenter", () => {
+  cynthiaScare.classList.add("active"); // Show gif instantly on hover start
+  moveNoButton();
 });
 
-// Dismiss Cynthia popup overlay the millisecond she stops hovering away from the 'No' option
 noBtn.addEventListener("mouseleave", () => {
-  cynthiaScare.classList.remove("active");
+  cynthiaScare.classList.remove("active"); // Hide gif completely when cursor rolls off
 });
 
-/* ---------- Confetti Pop Handler ---------- */
-function popConfetti() {
-  if (window.confetti) {
-    confetti({ particleCount: 120, spread: 75, origin: { y: 0.6 } });
-  }
-}
+// Touch fallback for mobile
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  cynthiaScare.classList.add("active");
+  moveNoButton();
+  setTimeout(() => { cynthiaScare.classList.remove("active"); }, 1000);
+});
 
+/* ---------- Yes Transition Trigger ---------- */
 document.querySelector('[data-action="say-yes"]').addEventListener("click", () => {
-  popConfetti();
   show("afteryes");
 });
 
-/* ---------- Screen Transition Listeners ---------- */
 document.getElementById("startJourneyBtn").addEventListener("click", () => {
   show("ask2");
 });
 
-/* ---------- Navigation Array Flow Guards ---------- */
+/* =============================================================
+   CENTER EDGE NAVIGATION CONTROLLER
+   ============================================================= */
 const ORDER = ["ask1","ask2","afteryes","date","time","timeout","food","addask","reasons","summary"];
-const NAV_HIDDEN_ON = ["ask1","summary","ask2"]; // Keep bottom nav out of the main jokes
+const NAV_HIDDEN_ON = ["ask1","summary","ask2"]; // Arrows stay hidden during initial jokes
 const navBack = document.getElementById("navBack");
 const navFwd  = document.getElementById("navFwd");
+
+function forwardAllowed(screen) {
+  switch (screen) {
+    case "afteryes": return videoDone;   
+    case "date": return !!state.day;     
+    case "time": return !!state.time;
+    case "food": return !!state.food;
+    default:     return true;            
+  }
+}
 
 function updateNav() {
   const hide = NAV_HIDDEN_ON.includes(currentScreen);
@@ -127,8 +112,19 @@ function updateNav() {
 
   const i = ORDER.indexOf(currentScreen);
   navBack.disabled = (i <= 1);
-  navFwd.disabled = !videoDone && currentScreen === "afteryes";
+  navFwd.disabled = !forwardAllowed(currentScreen);
 }
 
-// Initial Kickoff
+navBack.addEventListener("click", () => {
+  const i = ORDER.indexOf(currentScreen);
+  if (i > 1) show(ORDER[i - 1]);
+});
+navFwd.addEventListener("click", () => {
+  const i = ORDER.indexOf(currentScreen);
+  if (i < ORDER.length - 1 && forwardAllowed(currentScreen)) {
+    show(ORDER[i + 1]);
+  }
+});
+
+// Kickoff
 show("ask1");
