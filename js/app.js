@@ -28,18 +28,13 @@ function show(name) {
     }
   }
 
+  // post-yes sequence: img1 -> img2 -> video
+  if (name === "afteryes") runYesSequence();
+
   // keep nav arrows in sync (defined further down)
   if (typeof onScreenChange === "function") onScreenChange(name);
 }
 
-/* ---------- audio (start on click only, so browsers allow it) ---------- */
-const song1 = document.getElementById("song1");
-const song2 = document.getElementById("song2");
-function play(audioEl) {
-  // stop the other one first so they never overlap
-  [song1, song2].forEach(a => { if (a !== audioEl) { a.pause(); a.currentTime = 0; } });
-  audioEl.play().catch(() => {/* if a file is missing or blocked, fail silently */});
-}
 
 /* ---------- confetti helper ---------- */
 function pop() {
@@ -64,12 +59,58 @@ noBtn.addEventListener("mouseover", () => {
   noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
 });
 
-// YES → song1 + confetti + go to the post-yes screen
+// YES → confetti + go to the post-yes screen
 document.querySelector('[data-action="say-yes"]').addEventListener("click", () => {
-  play(song1);
   pop();
   show("afteryes");
 });
+
+/* =============================================================
+   POST-YES SEQUENCE: img1 fades in/out -> img2 fades in/out -> video
+   Tweak the hold times (ms) below.
+   ============================================================= */
+const YES_HOLD = 2200;   // how long each image stays fully visible
+const YES_FADE = 900;    // must match the CSS transition (0.9s)
+let yesSeqRan = false;
+let videoDone = false;
+
+function runYesSequence() {
+  const img1 = document.getElementById("yesImg1");
+  const img2 = document.getElementById("yesImg2");
+  const vid  = document.getElementById("yesVideo");
+
+  // reset (so it replays cleanly if she navigates back then forward)
+  [img1, img2, vid].forEach(el => el.classList.remove("show"));
+  vid.pause(); vid.currentTime = 0;
+  yesSeqRan = true;
+  videoDone = false;
+  updateNav();   // lock the forward arrow while the sequence plays
+
+  // img1 in
+  setTimeout(() => img1.classList.add("show"), 50);
+  // img1 out, img2 in
+  setTimeout(() => img1.classList.remove("show"), 50 + YES_HOLD);
+  setTimeout(() => img2.classList.add("show"), 50 + YES_HOLD + YES_FADE);
+  // img2 out
+  setTimeout(() => img2.classList.remove("show"), 50 + YES_HOLD + YES_FADE + YES_HOLD);
+  // video in + play
+  const vidStart = 50 + YES_HOLD + YES_FADE + YES_HOLD + YES_FADE;
+  setTimeout(() => {
+    vid.classList.add("show");
+    vid.play().catch(() => {/* if blocked, the forward arrow still works */});
+  }, vidStart);
+
+  // when the video finishes, unlock the forward arrow (goes to date)
+  vid.onended = () => {
+    videoDone = true;
+    if (currentScreen === "afteryes") updateNav();
+  };
+  // safety: if the video can't load/play, don't trap her — unlock anyway
+  vid.onerror = () => {
+    videoDone = true;
+    if (currentScreen === "afteryes") updateNav();
+  };
+}
 
 /* =============================================================
    SCREEN 2 — DATE  (Friday is a trap that bounces back)
@@ -182,7 +223,6 @@ if (igTrack) {
 document.querySelectorAll('[data-action="goto"]').forEach(btn => {
   btn.addEventListener("click", () => {
     const target = btn.dataset.target;
-    if (target === "interested") play(song2); // click = allowed to start audio
     if (target === "summary") buildSummary();
     show(target);
   });
@@ -232,6 +272,7 @@ const NAV_NO_FORWARD = ["ask2"];                    // YES button advances these
 // what each screen needs before forward is allowed (null = no gate)
 function forwardAllowed(screen) {
   switch (screen) {
+    case "afteryes": return videoDone;   // only after the video finishes
     case "date": return !!state.day;     // must have picked a (non-Friday) day
     case "time": return !!state.time;
     case "food": return !!state.food;
@@ -265,7 +306,6 @@ navFwd.addEventListener("click", () => {
   const i = ORDER.indexOf(currentScreen);
   if (i < ORDER.length - 1 && forwardAllowed(currentScreen)) {
     const next = ORDER[i + 1];
-    if (next === "interested") play(song2);
     if (next === "summary") buildSummary();
     show(next);
   }
