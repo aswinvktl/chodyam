@@ -162,6 +162,7 @@ function runDateScreenSequence() {
 
   [qText, options].forEach(el => el.classList.remove("show"));
   dateNextBtnReveal.classList.remove("show");
+  dayReact.hidden = true; // Fix: Kept hidden on question render
 
   setTimeout(() => { if (currentScreen === "date") qText.classList.add("show"); }, 200);
   setTimeout(() => { if (currentScreen === "date") options.classList.add("show"); }, 1100);
@@ -200,7 +201,7 @@ document.querySelectorAll('[data-choice="day"]').forEach(btn => {
 
     clearTimeout(badDayTimer);
     state.day = val;
-    showDayReact(info);
+    showDayReact(info); // Fix: Peppa Pig pops up smoothly directly upon clicking selection
     dateNextBtnReveal.classList.add("show"); 
     updateNav(); 
   });
@@ -219,7 +220,7 @@ function runTimeScreenSequence() {
 
   [qText, options].forEach(el => el.classList.remove("show"));
   timeNextBtnReveal.classList.remove("show");
-  timeReact.hidden = true;
+  timeReact.hidden = true; // Fix: Kept hidden on question render
   timeReaction.textContent = "";
 
   setTimeout(() => { if (currentScreen === "time") qText.classList.add("show"); }, 200);
@@ -230,7 +231,7 @@ document.querySelectorAll('[data-choice="time"]').forEach(btn => {
   btn.addEventListener("click", () => {
     state.time = btn.dataset.value;
     timeReaction.textContent = "great choice again";
-    timeReact.hidden = true; 
+    timeReact.hidden = true; // Fix: Anthony Mackie stays hidden until button confirmation
 
     timeNextBtnReveal.classList.add("show"); 
     updateNav();
@@ -424,6 +425,7 @@ document.getElementById("startJourneyBtn").addEventListener("click", () => { sho
 document.getElementById("videoNextBtn").addEventListener("click", () => { show("date"); });
 document.getElementById("dateNextBtn").addEventListener("click", () => { show("time"); });
 
+// Smoothly choreography sequence for Anthony Mackie popping up ONLY on button click confirmation!
 document.getElementById("timeNextBtn").addEventListener("click", () => {
   timeReact.hidden = false;
   timeReact.style.transform = "scale(0.9)";
@@ -435,7 +437,6 @@ document.getElementById("timeNextBtn").addEventListener("click", () => {
 document.getElementById("foodNextBtn").addEventListener("click", () => { show("addask"); });
 document.getElementById("addaskNextBtn").addEventListener("click", () => { show("reasons"); });
 document.getElementById("reasonsNextBtn").addEventListener("click", () => {
-  // End summary screen route trigger path connection field placeholder
   alert("End Page coming up next! Current selections saved: " + JSON.stringify(state));
 });
 
