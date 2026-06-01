@@ -55,16 +55,17 @@
 
   <section class="screen bg-master" data-screen="date">
     <div class="cutesy-box">
-      <img class="day-gif" id="dayGif" src="resources/time-is-up-rabbit-meme-time-is-up-rabbit-time.gif" alt="" />
-      <h2 class="day-q" style="color: var(--ink);">so what day are WE free?</h2>
-      <div class="options">
+      <h2 class="day-q reveal-item" id="dateQuestionReveal" style="color: var(--ink); margin-top: 10px;">so what day are WE free?</h2>
+      
+      <div class="options reveal-item" id="dateOptionsReveal">
         <button class="opt" data-choice="day" data-value="Thursday 04 June">Thursday 04</button>
         <button class="opt" data-choice="day" data-value="Friday 05 June">Friday 05</button>
         <button class="opt" data-choice="day" data-value="Saturday 06 June">Saturday 06</button>
         <button class="opt" data-choice="day" data-value="Sunday 07 June">Sunday 07</button>
       </div>
+
       <p class="reaction" id="dateReaction"></p>
-      <img class="day-react" id="dayReact" alt="" hidden />
+      <img class="day-react" id="dayReact" alt="Reaction image" hidden />
     </div>
   </section>
 

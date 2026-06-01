@@ -171,15 +171,16 @@ const DAYS = {
 };
 
 function runDateScreenSequence() {
-  const gifBox  = document.getElementById("dateGifReveal");
   const qText   = document.getElementById("dateQuestionReveal");
   const options = document.getElementById("dateOptionsReveal");
 
-  [gifBox, qText, options].forEach(el => el.classList.remove("show"));
+  [qText, options].forEach(el => el.classList.remove("show"));
 
-  setTimeout(() => { if (currentScreen === "date") gifBox.classList.add("show"); }, 150);
-  setTimeout(() => { if (currentScreen === "date") qText.classList.add("show"); }, 1100);
-  setTimeout(() => { if (currentScreen === "date") options.classList.add("show"); }, 2000);
+  // Beat 1: Float the question row into position first
+  setTimeout(() => { if (currentScreen === "date") qText.classList.add("show"); }, 200);
+
+  // Beat 2: Hand her the choice options to interact with right after
+  setTimeout(() => { if (currentScreen === "date") options.classList.add("show"); }, 1100);
 }
 
 function showDayReact(info) {
