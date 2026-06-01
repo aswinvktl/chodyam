@@ -259,7 +259,12 @@ document.querySelectorAll('[data-choice="time"]').forEach(btn => {
   btn.addEventListener("click", () => {
     state.time = btn.dataset.value;
     timeReaction.textContent = "great choice again";
-    timeReact.style.display = "none"; 
+
+    // pop the reaction image immediately, same animation as the date screen
+    timeReact.style.display = "block";
+    timeReact.style.transform = "scale(0.9)";
+    timeReact.style.transition = "transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25)";
+    setTimeout(() => { timeReact.style.transform = "scale(1)"; }, 20);
 
     timeNextBtnReveal.classList.add("show"); 
     updateNav();
@@ -519,11 +524,7 @@ document.getElementById("videoNextBtn").addEventListener("click", () => { show("
 document.getElementById("dateNextBtn").addEventListener("click", () => { show("time"); });
 
 document.getElementById("timeNextBtn").addEventListener("click", () => {
-  timeReact.style.display = "block"; 
-  timeReact.style.transform = "scale(0.9)";
-  timeReact.style.transition = "transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25)";
-  setTimeout(() => { timeReact.style.transform = "scale(1)"; }, 20);
-  setTimeout(() => { if (currentScreen === "time") { show("timeout"); } }, 1500);
+  show("timeout");
 });
 
 document.getElementById("foodNextBtn").addEventListener("click", () => { show("addask"); });
