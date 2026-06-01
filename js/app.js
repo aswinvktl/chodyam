@@ -23,6 +23,7 @@ function show(name) {
   if (name === "ask1") runScreen1aSequence();
   if (name === "ask2") runScreen1bSequence();
   if (name === "afteryes") runYesSequence();
+  if (name === "date") runDateScreenSequence();
   
   updateNav();
 }
@@ -129,8 +130,7 @@ function runYesSequence() {
   vid.onended = () => {
     videoDone = true;
     if (currentScreen === "afteryes") {
-      updateNav();
-      show("date"); 
+      updateNav(); 
     }
   };
 
@@ -140,11 +140,90 @@ function runYesSequence() {
   };
 }
 
+/* =============================================================
+   SCREEN 2 — DATE PICKER TIMELINE SELECTIONS
+   ============================================================= */
+const dateReaction = document.getElementById("dateReaction");
+const dayReact = document.getElementById("dayReact");
+let badDayTimer = null;
+
+const DAYS = {
+  "Thursday 04 June": {
+    good: true,
+    img: "resources/800d8afdfa4443fda08fdf2c89e16629(3).jpg",
+    caption: "great choice",
+  },
+  "Sunday 07 June": {
+    good: true,
+    img: "resources/901ad9ad498cae6cbc137b6b57c9f012(3).jpg",
+    caption: "THE BESTEST CHOICE. look at you being decisive hahahahahah",
+  },
+  "Friday 05 June": {
+    good: false,
+    img: "resources/8cef642481853f378a453a318ef7f205(3).jpg",
+    caption: "we are working",
+  },
+  "Saturday 06 June": {
+    good: false,
+    img: "resources/f38bc75959b15a509d0d0c1a7c11dc88.jpg",
+    caption: "too busy, too many people",
+  },
+};
+
+function runDateScreenSequence() {
+  const gifBox  = document.getElementById("dateGifReveal");
+  const qText   = document.getElementById("dateQuestionReveal");
+  const options = document.getElementById("dateOptionsReveal");
+
+  [gifBox, qText, options].forEach(el => el.classList.remove("show"));
+
+  setTimeout(() => { if (currentScreen === "date") gifBox.classList.add("show"); }, 150);
+  setTimeout(() => { if (currentScreen === "date") qText.classList.add("show"); }, 1100);
+  setTimeout(() => { if (currentScreen === "date") options.classList.add("show"); }, 2000);
+}
+
+function showDayReact(info) {
+  dateReaction.textContent = info.caption;
+  dayReact.onerror = () => { dayReact.hidden = true; }; 
+  dayReact.src = info.img;
+  dayReact.hidden = false;
+  
+  dayReact.style.transform = "scale(0.9)";
+  dayReact.style.transition = "transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25)";
+  setTimeout(() => { dayReact.style.transform = "scale(1)"; }, 20);
+}
+
+document.querySelectorAll('[data-choice="day"]').forEach(btn => {
+  btn.addEventListener("click", () => {
+    const val = btn.dataset.value;
+    const info = DAYS[val];
+    if (!info) return;
+
+    if (!info.good) {
+      state.day = null;            
+      updateNav(); 
+      showDayReact(info);
+      
+      clearTimeout(badDayTimer);
+      badDayTimer = setTimeout(() => {
+        dayReact.hidden = true;
+        dateReaction.textContent = "go on, try again 👀";
+      }, 2200);
+      return;                      
+    }
+
+    clearTimeout(badDayTimer);
+    state.day = val;
+    showDayReact(info);
+    updateNav(); 
+  });
+});
+
 /* ---------- Static Interaction Bindings ---------- */
 document.querySelector('[data-action="say-yes"]').addEventListener("click", () => {
   const vid = document.getElementById("yesVideo");
   if (vid) {
-    vid.load(); // Unlocks the system audio stream channel natively via user interaction
+    vid.load(); 
   }
   show("afteryes");
 });
