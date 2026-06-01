@@ -25,6 +25,7 @@ function show(name) {
   if (name === "afteryes") runYesSequence();
   if (name === "date") runDateScreenSequence();
   if (name === "time") runTimeScreenSequence();
+  if (name === "timeout") runTimeoutScreenSequence();
   
   updateNav();
 }
@@ -146,26 +147,10 @@ const dateNextBtnReveal = document.getElementById("dateNextBtnReveal");
 let badDayTimer = null;
 
 const DAYS = {
-  "Thursday 04 June": {
-    good: true,
-    img: "resources/a.jpeg", 
-    caption: "great choice",
-  },
-  "Sunday 07 June": {
-    good: true,
-    img: "resources/901ad9ad498cae6cbc137b6b57c9f012(3).jpg",
-    caption: "THE BESTEST CHOICE. look at you being decisive hahahahahah",
-  },
-  "Friday 05 June": {
-    good: false,
-    img: "resources/8cef642481853f378a453a318ef7f205(3).jpg",
-    caption: "we are working",
-  },
-  "Saturday 06 June": {
-    good: false,
-    img: "resources/f38bc75959b15a509d0d0c1a7c11dc88.jpg",
-    caption: "too busy, too many people",
-  },
+  "Thursday 04 June": { good: true, img: "resources/a.jpeg", caption: "great choice" },
+  "Sunday 07 June": { good: true, img: "resources/901ad9ad498cae6cbc137b6b57c9f012(3).jpg", caption: "THE BESTEST CHOICE. look at you being decisive hahahahahah" },
+  "Friday 05 June": { good: false, img: "resources/8cef642481853f378a453a318ef7f205(3).jpg", caption: "we are working" },
+  "Saturday 06 June": { good: false, img: "resources/f38bc75959b15a509d0d0c1a7c11dc88.jpg", caption: "too busy, too many people" },
 };
 
 function runDateScreenSequence() {
@@ -173,7 +158,7 @@ function runDateScreenSequence() {
   const options = document.getElementById("dateOptionsReveal");
 
   [qText, options].forEach(el => el.classList.remove("show"));
-  dateNextBtnReveal.classList.remove("show"); // Reset card button layout
+  dateNextBtnReveal.classList.remove("show");
 
   setTimeout(() => { if (currentScreen === "date") qText.classList.add("show"); }, 200);
   setTimeout(() => { if (currentScreen === "date") options.classList.add("show"); }, 1100);
@@ -213,7 +198,7 @@ document.querySelectorAll('[data-choice="day"]').forEach(btn => {
     clearTimeout(badDayTimer);
     state.day = val;
     showDayReact(info);
-    dateNextBtnReveal.classList.add("show"); // Pops up the card's 'next' button cleanly!
+    dateNextBtnReveal.classList.add("show"); 
     updateNav(); 
   });
 });
@@ -244,14 +229,70 @@ document.querySelectorAll('[data-choice="time"]').forEach(btn => {
     timeReaction.textContent = "great choice again";
     timeReact.hidden = false;
     
-    // Smooth custom pop drop animation
     timeReact.style.transform = "scale(0.9)";
     timeReact.style.transition = "transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.25)";
     setTimeout(() => { timeReact.style.transform = "scale(1)"; }, 20);
 
-    timeNextBtnReveal.classList.add("show"); // Reveal the next action controller button!
+    timeNextBtnReveal.classList.add("show"); 
     updateNav();
   });
+});
+
+/* =============================================================
+   SCREEN 3b — TIMEOUT / INTERMISSION WATER BREAK
+   ============================================================= */
+const timeoutStage1 = document.getElementById("timeoutStage1");
+const timeoutStage2 = document.getElementById("timeoutStage2");
+const waterCount = document.getElementById("waterCount");
+let waterTimer = null;
+
+function runTimeoutScreenSequence() {
+  clearInterval(waterTimer);
+  timeoutStage1.hidden = false;
+  timeoutStage2.hidden = true;
+
+  const shaqImg = document.getElementById("shaqImgReveal");
+  const shaqHead = document.getElementById("shaqHeaderReveal");
+  const shaqSub = document.getElementById("shaqSubReveal");
+  const shaqBtn = document.getElementById("shaqBtnReveal");
+
+  [shaqImg, shaqHead, shaqSub, shaqBtn].forEach(el => el.classList.remove("show"));
+
+  setTimeout(() => { if (currentScreen === "timeout") shaqImg.classList.add("show"); }, 150);
+  setTimeout(() => { if (currentScreen === "timeout") shaqHead.classList.add("show"); }, 900);
+  setTimeout(() => { if (currentScreen === "timeout") shaqSub.classList.add("show"); }, 1500);
+  setTimeout(() => { if (currentScreen === "timeout") shaqBtn.classList.add("show"); }, 2200);
+}
+
+function startWaterBreak() {
+  let count = 10;
+  waterCount.textContent = count;
+  clearInterval(waterTimer);
+
+  waterTimer = setInterval(() => {
+    count--;
+    waterCount.textContent = count;
+    if (count <= 0) {
+      clearInterval(waterTimer);
+      leaveWaterBreak();
+    }
+  }, 1000);
+}
+
+function leaveWaterBreak() {
+  clearInterval(waterTimer);
+  const target = document.querySelector('[data-screen="food"]') ? "food" : "date";
+  show(target);
+}
+
+document.getElementById("timeoutStartBtn").addEventListener("click", () => {
+  timeoutStage1.hidden = true;
+  timeoutStage2.hidden = false;
+  startWaterBreak();
+});
+
+document.getElementById("waterSkip").addEventListener("click", () => {
+  leaveWaterBreak();
 });
 
 /* ---------- Static Interaction Bindings ---------- */
@@ -266,26 +307,15 @@ document.querySelector('[data-action="say-yes"]').addEventListener("click", () =
 document.getElementById("startJourneyBtn").addEventListener("click", () => {
   show("ask2");
 });
-
-document.getElementById("videoNextBtn").addEventListener("click", () => {
-  show("date"); 
-});
-
-document.getElementById("dateNextBtn").addEventListener("click", () => {
-  show("time"); 
-});
-
-document.getElementById("timeNextBtn").addEventListener("click", () => {
-  // Proceed straight into your system timeout water break screen
-  const target = document.querySelector('[data-screen="timeout"]') ? "timeout" : "date";
-  show(target); 
-});
+document.getElementById("videoNextBtn").addEventListener("click", () => { show("date"); });
+document.getElementById("dateNextBtn").addEventListener("click", () => { show("time"); });
+document.getElementById("timeNextBtn").addEventListener("click", () => { show("timeout"); });
 
 /* =============================================================
    CENTER EDGE SYSTEM NAVIGATION Matrix
    ============================================================= */
-const ORDER = ["ask1","ask2","afteryes","date","time"];
-const NAV_HIDDEN_ON = ["ask1","ask2"]; 
+const ORDER = ["ask1","ask2","afteryes","date","time","timeout"];
+const NAV_HIDDEN_ON = ["ask1","ask2","timeout"]; 
 const navBack = document.getElementById("navBack");
 const navFwd  = document.getElementById("navFwd");
 

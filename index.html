@@ -1,253 +1,166 @@
-/* =============================================================
-   date-site — Complete Custom Playful Stylesheet
-   ============================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Nunito:wght@400;700&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>•ᴗ•</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
 
-:root {
-  --bg: #fff0f3;
-  --bg2: #ffe3ec;
-  --ink: #3a2e35;
-  --accent: #ff5d8f;
-  --accent-d: #e23e73;
-  --yes: #ff5d8f;
-  --paper: rgba(255, 253, 250, 0.85);
-  --shadow: 0 12px 40px rgba(226, 62, 115, 0.12);
-  --display: 'Fraunces', Georgia, serif;
-  --body: 'Nunito', system-ui, sans-serif;
-}
+<div id="stage">
 
-* { box-sizing: border-box; }
+  <!-- Fixed Center Edge System Navigation Controls -->
+  <button id="navBack" class="nav-arrow nav-back" aria-label="back" hidden>‹</button>
+  <button id="navFwd" class="nav-arrow nav-fwd" aria-label="forward" hidden>›</button>
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: var(--body);
-  color: var(--ink);
-  background: var(--bg);
-  overflow-x: hidden;
-}
+  <!-- ========================================================
+       SCREEN 1a — THE QUESTION SETUP
+  ========================================================= -->
+  <section class="screen is-active bg-master" data-screen="ask1">
+    <div class="cutesy-box">
+      <h1 class="joke-q">Why did the calendar feel proud?</h1>
+      <div class="reveal-item" id="arrowReveal">
+        <button class="arrow-next" id="startJourneyBtn" aria-label="next">→</button>
+      </div>
+    </div>
+  </section>
 
-#stage { position: relative; min-height: 100vh; }
+  <!-- ========================================================
+       SCREEN 1b — PUNCHLINE & NARRATIVE SEQUENCE
+  ========================================================= -->
+  <section class="screen bg-master" data-screen="ask2">
+    <div class="cutesy-box">
+      <p class="joke-punch reveal-item" id="seqPunch">coz it has too many dates. hahahahah</p>
+      <h1 class="ask reveal-item" id="seqAsk">can I have one with u?</h1>
 
-/* Master Layout Background Layer Setup */
-.bg-master {
-  background-image: url('../resources/•••.jpeg');
-  background-size: cover;
-  background-position: center;
-}
-.bg-master::before {
-  content: "";
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.4));
-  z-index: 0;
-}
+      <div class="btn-row reveal-item" id="seqButtons">
+        <button class="btn btn-yes" data-action="say-yes">YES</button>
+        
+        <!-- The position-managed buffer tracking region wrapper -->
+        <div class="no-trigger-region" id="noRegion">
+          <button class="btn btn-no">no</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-/* ---------- Screen Layout States ---------- */
-.screen {
-  position: absolute; inset: 0;
-  display: none;
-  align-items: center; justify-content: center;
-  padding: 24px;
-  opacity: 0;
-  transition: opacity .45s ease;
-}
-.screen.is-active {
-  display: flex;
-  opacity: 1;
-}
+  <!-- Centered Cynthia Scare Popup Overlay Layer -->
+  <img class="cynthia-popup" id="cynthiaScare"
+       src="resources/cynthia-erivo-shocked-gif-cynthia-erivo-shocked-shock.gif" 
+       alt="Surprise!" />
 
-/* ---------- Semi-Transparent Squiggly Sketchpad Box ---------- */
-.cutesy-box {
-  background: var(--paper);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 255px 20px 225px 30px / 30px 225px 25px 255px;
-  border: 3px solid var(--ink);
-  box-shadow: 5px 5px 0px var(--ink), 0 12px 40px rgba(226, 62, 115, 0.12);
-  padding: 50px 40px;
-  max-width: 620px;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-  transition: all 0.3s ease;
-}
-.cutesy-box:hover {
-  border-radius: 225px 30px 255px 20px / 25px 255px 30px 225px;
-}
+  <!-- ========================================================
+       SCREEN after YES — Video stream playing cleanly with Audio
+  ========================================================= -->
+  <section class="screen bg-master" data-screen="afteryes">
+    <div class="cutesy-box">
+      <div class="yes-stage">
+        <img class="yes-media" id="yesImg1" src="resources/3cf9360ae0d5b10c7445bf571fbc7d7b(3).jpg" alt="Us" />
+        <img class="yes-media" id="yesImg2" src="resources/24a49c029b0f5fef2cb0c9b3cf33178a(3).jpg" alt="Us again" />
+        <video class="yes-media" id="yesVideo" playsinline preload="auto">
+          <source src="resources/Video-310.mp4" type="video/mp4" />
+        </video>
+      </div>
+      
+      <!-- Dedicated Post-Video Action Controller -->
+      <div class="reveal-item" id="videoNextBtnReveal" style="margin-top: 24px;">
+        <button class="btn btn-yes-next" id="videoNextBtn">next →</button>
+      </div>
+    </div>
+  </section>
 
-/* ---------- Center Edge System Navigation ---------- */
-.nav-arrow {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 52px; height: 52px;
-  border-radius: 50%;
-  border: 3px solid var(--ink);
-  background: #fffdfa;
-  color: var(--ink);
-  font-size: 1.8rem;
-  font-weight: 700;
-  line-height: 1;
-  cursor: pointer; 
-  z-index: 50;
-  box-shadow: 3px 3px 0px var(--ink);
-  display: flex; align-items: center; justify-content: center;
-  transition: transform .15s ease, opacity .2s ease, background .15s ease;
-}
-.nav-arrow:hover:not(:disabled) { 
-  transform: translateY(-50%) scale(1.1); 
-  background: var(--bg2);
-}
-.nav-back { left: 24px; }
-.nav-fwd  { right: 24px; }
-.nav-arrow:disabled { opacity: .25; cursor: default; box-shadow: none; }
+  <!-- ========================================================
+       SCREEN 2 — DATE PICKER
+  ========================================================= -->
+  <section class="screen bg-master" data-screen="date">
+    <div class="cutesy-box">
+      <!-- Beat 1: The Question floats up first -->
+      <h2 class="day-q reveal-item" id="dateQuestionReveal" style="color: var(--ink); margin-top: 10px;">so what day are WE free?</h2>
+      
+      <!-- Beat 2: The Interactive Day Selection Options reveal right after -->
+      <div class="options reveal-item" id="dateOptionsReveal">
+        <button class="opt" data-choice="day" data-value="Thursday 04 June">Thursday 04</button>
+        <button class="opt" data-choice="day" data-value="Friday 05 June">Friday 05</button>
+        <button class="opt" data-choice="day" data-value="Saturday 06 June">Saturday 06</button>
+        <button class="opt" data-choice="day" data-value="Sunday 07 June">Sunday 07</button>
+      </div>
 
-@media (max-width: 768px) {
-  .nav-arrow { width: 44px; height: 44px; font-size: 1.4rem; }
-  .nav-back { left: 10px; } .nav-fwd { right: 10px; }
-}
+      <!-- Live reaction strings and pop-up context cards -->
+      <p class="reaction" id="dateReaction"></p>
+      <img class="day-react" id="dayReact" alt="" hidden />
+      
+      <!-- Card-based next button (unlocked after picking a valid date) -->
+      <div class="reveal-item" id="dateNextBtnReveal" style="margin-top: 24px;">
+        <button class="btn btn-yes-next" id="dateNextBtn">next →</button>
+      </div>
+    </div>
+  </section>
 
-/* ---------- Sequence Entry Animations ---------- */
-.reveal-item {
-  opacity: 0;
-  transform: translateY(15px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal-item.show {
-  opacity: 1;
-  transform: translateY(0);
-}
+  <!-- ========================================================
+       SCREEN 3 — TIME PICKER
+  ========================================================= -->
+  <section class="screen bg-master" data-screen="time">
+    <div class="cutesy-box">
+      <!-- Beat 1: The Question floats up first -->
+      <h2 class="day-q reveal-item" id="timeQuestionReveal" style="color: var(--ink); margin-top: 10px;">and what time?</h2>
+      
+      <!-- Beat 2: The Interactive Time Selection Options reveal right after -->
+      <div class="options reveal-item" id="timeOptionsReveal">
+        <button class="opt" data-choice="time" data-value="5pm">5pm</button>
+        <button class="opt" data-choice="time" data-value="6pm">6pm</button>
+        <button class="opt" data-choice="time" data-value="7pm">7pm</button>
+      </div>
 
-.joke-q { font-family: var(--display); font-size: clamp(1.8rem, 4.5vw, 2.8rem); line-height: 1.2; margin: 0; color: var(--ink); }
-.joke-punch { font-family: var(--body); font-size: clamp(1.2rem, 3vw, 1.5rem); font-style: italic; font-weight: 700; color: var(--accent-d); margin: 0 0 24px; }
-.ask { font-family: var(--display); font-size: clamp(2rem, 5.5vw, 3.2rem); color: var(--ink); margin: 0 0 32px; }
+      <!-- Live reaction strings and Anthony Smacky pop-up -->
+      <p class="reaction" id="timeReaction"></p>
+      <img class="day-react" id="timeReact" src="resources/anthonySmacky.jpg" alt="" hidden />
+      
+      <!-- Card-based next button (reveals from under the box after picking a time) -->
+      <div class="reveal-item" id="timeNextBtnReveal" style="margin-top: 24px;">
+        <button class="btn btn-yes-next" id="timeNextBtn">next →</button>
+      </div>
+    </div>
+  </section>
 
-/* ---------- Interactive Buttons & Absolute Hotspot Frame Layout ---------- */
-.btn-row { 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 80px; 
-  position: relative; 
-  min-height: 160px; 
-  width: 100%; 
-}
+  <!-- ========================================================
+       SCREEN 3b — TIMEOUT / WATER BREAK (Intermission Page)
+  ========================================================= -->
+  <section class="screen bg-master" data-screen="timeout">
+    <div class="cutesy-box">
+      
+      <!-- Stage 1: Shaq Timeout Call (Tap to Proceed) -->
+      <div id="timeoutStage1">
+        <div class="reveal-item" id="shaqImgReveal">
+          <img class="day-gif" id="shaqImg" src="resources/shaq-timeout.jpg" alt="Shaq Timeout" style="width: 260px; max-width: 65vw;" />
+        </div>
+        <h2 class="day-q reveal-item" id="shaqHeaderReveal" style="color: var(--ink); margin: 15px 0 5px;">⏱️ TIMEOUT</h2>
+        <p class="reaction reveal-item" id="shaqSubReveal" style="margin-bottom: 20px;">Take a quick breath...</p>
+        
+        <div class="reveal-item" id="shaqBtnReveal">
+          <button class="btn btn-yes-next" id="timeoutStartBtn">continue →</button>
+        </div>
+      </div>
 
-.btn { 
-  font-family: var(--body); 
-  font-weight: 700; 
-  border: 3px solid var(--ink); 
-  border-radius: 120px 15px 100px 20px / 25px 95px 15px 110px; 
-  cursor: pointer; 
-  transition: transform .15s ease, box-shadow .15s ease, border-radius .15s ease; 
-}
+      <!-- Stage 2: 10-Second Active Countdown hydration stop -->
+      <div id="timeoutStage2" hidden>
+        <div class="reveal-item show">
+          <img class="day-gif" src="resources/drinkwater.jpeg" alt="Drink Water Reminder" style="width: 240px; max-width: 60vw;" />
+        </div>
+        <h2 class="day-q style-q" style="color: var(--ink); margin: 10px 0 5px;">water break 💧</h2>
+        <p class="reaction" style="margin-bottom: 25px;"><span id="waterCount" style="font-weight: 700; color: var(--accent); font-size: 1.4rem;">10</span> seconds… hydrate.</p>
+        
+        <div>
+          <button class="btn btn-yes-next" id="waterSkip" style="background: var(--bg2); color: var(--ink);">skip →</button>
+        </div>
+      </div>
 
-.btn-yes {
-  background: var(--yes); 
-  color: white; 
-  font-size: 2.2rem; 
-  padding: 12px 48px; 
-  box-shadow: 4px 4px 0px var(--ink); 
-  z-index: 10;
-  position: relative;
-  right: 40px; 
-}
-.btn-yes:hover { 
-  transform: scale(1.05) rotate(-1.5deg); 
-  box-shadow: 2px 2px 0px var(--ink); 
-  border-radius: 95px 25px 120px 15px / 15px 110px 25px 95px;
-}
+    </div>
+  </section>
 
-/* Post-Video Card Button Styling */
-.btn-yes-next {
-  background: var(--accent);
-  color: white;
-  font-size: 1.4rem;
-  padding: 10px 36px;
-  box-shadow: 3px 3px 0px var(--ink);
-  border: 3px solid var(--ink);
-  border-radius: 80px 15px 75px 12px / 14px 70px 12px 85px;
-}
-.btn-yes-next:hover {
-  transform: scale(1.05) rotate(2deg);
-  box-shadow: 1px 1px 0px var(--ink);
-}
+</div>
 
-/* Invisible Absolute Region container frame around the "No" button */
-.no-trigger-region {
-  padding: 40px 50px; 
-  display: inline-block;
-  position: absolute;
-  top: 40px;
-  right: 40px;
-  z-index: 9;
-  cursor: default;
-  transition: top 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), right 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.btn-no {
-  background: #fffdfa; 
-  color: var(--ink); 
-  font-size: 1.1rem; 
-  padding: 10px 24px; 
-  box-shadow: 3px 3px 0px var(--ink); 
-  margin: 0; 
-  pointer-events: none; 
-}
-
-.arrow-next {
-  margin-top: 24px; width: 64px; height: 64px; border: 3px solid var(--ink); border-radius: 48% 52% 51% 49% / 49% 51% 49% 51%; background: var(--bg2); color: var(--ink); font-size: 1.8rem; cursor: pointer; box-shadow: 3px 3px 0px var(--ink); transition: transform .15s ease, background .2s ease;
-}
-.arrow-next:hover { transform: scale(1.1) rotate(15deg); background: var(--accent); color: white; box-shadow: 1px 1px 0px var(--ink); }
-
-/* ---------- YES Page Image/Video Square Container Frame ---------- */
-.yes-stage {
-  position: relative;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1; 
-  overflow: hidden;
-  border: 3px solid var(--ink);
-  border-radius: 40px 30px 45px 35px / 35px 40px 30px 45px;
-  box-shadow: 4px 4px 0px var(--ink);
-  background: #000;
-}
-.yes-media {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-  opacity: 0;
-  transition: opacity 0.8s ease-in-out;
-  pointer-events: none;
-}
-.yes-media.show { opacity: 1; }
-
-/* ---------- Center Screen Borderless Cynthia Scare Popup Overlay ---------- */
-.cynthia-popup {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0.6);
-  width: 320px; max-width: 75vw;
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.cynthia-popup.active {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-/* ---------- Form Options Configuration Fields ---------- */
-.options { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 14px; }
-.opt { font-family: var(--body); font-weight: 700; background: var(--bg2); border: 2px solid var(--ink); border-radius: 80px 15px 75px 12px / 14px 70px 12px 85px; padding: 12px 20px; font-size: 1rem; cursor: pointer; box-shadow: 2px 2px 0px var(--ink); transition: transform .12s ease, background .2s ease, border-radius .12s ease; }
-.opt:hover { transform: translateY(-2px) rotate(1deg); background: var(--accent); color: white; border-radius: 75px 12px 80px 15px / 12px 85px 14px 70px; }
-.reaction { font-family: var(--display); font-style: italic; font-size: 1.15rem; min-height: 1.4em; margin: 12px 0 0; color: var(--ink); }
-.day-wrap { position: relative; z-index: 2; text-align: center; color: #fff; max-width: 720px; }
-.day-gif { width: 200px; max-width: 50vw; border-radius: 14px; margin-bottom: 18px; box-shadow: 0 10px 36px rgba(0,0,0,0.3); }
-.day-q { font-family: var(--display); font-size: clamp(1.8rem, 4.5vw, 2.8rem); margin: 0 0 26px; }
-.day-react { display: block; margin: 18px auto 0; width: 280px; max-width: 70vw; border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+<script src="lib/qrcode.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
