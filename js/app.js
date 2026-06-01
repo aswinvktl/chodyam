@@ -53,19 +53,16 @@ function runScreen1bSequence() {
 const noRegion = document.getElementById("noRegion");
 const cynthiaScare = document.getElementById("cynthiaScare");
 
-// Keep track of where the button is running to prevent infinite glitch loops
 let isMoved = false;
 
 function moveNoRegion() {
   if (!isMoved) {
-    // Teleport the button out of reach to a fixed alternative spot on the card layout
-    noRegion.style.top = "40px";
-    noRegion.style.right = "-60px";
+    noRegion.style.top = "10px";
+    noRegion.style.right = "-40px";
     isMoved = true;
   } else {
-    // If she tries to go for it again, throw it down to the bottom corner
-    noRegion.style.top = "110px";
-    noRegion.style.right = "-120px";
+    noRegion.style.top = "95px";
+    noRegion.style.right = "-100px";
     isMoved = false;
   }
 }
@@ -147,7 +144,7 @@ function runYesSequence() {
 document.querySelector('[data-action="say-yes"]').addEventListener("click", () => {
   const vid = document.getElementById("yesVideo");
   if (vid) {
-    vid.load(); // Unlocks audio streaming right on her active click event
+    vid.load(); // Unlocks the system audio stream channel natively via user interaction
   }
   show("afteryes");
 });
